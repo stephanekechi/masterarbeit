@@ -1,0 +1,39 @@
+version: '3'
+services:
+  mysql: #Service 1
+    image: 'mysql:latest'
+    environment:
+      - MYSQL_USER=ma
+      - MYSQL_PASSWORD=marbeit
+
+  pythonApi: #Service 2: Python server
+    build:
+      context: ./Python-Server
+      dockerfile: Dockerfile.dev
+    environment:
+      - DBUSER=ma
+      - DBHOST=mysql
+      - DBDATABASE=mysql
+      - DBPASSWORD=marbeit
+      - DBPORT=3306
+
+  client: #Service 3: React
+    stdin_open: true
+    build:
+      context: ./React-Server
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /home/app/node_modules
+      - ./React-Server:/app
+
+  nginx: #Service 4: Loadbalancer
+    restart: always
+    build:
+      context: ./Nginx
+      dockerfile: Dockerfile.dev
+    ports:
+      - '8000:80'
+    depends_on:
+      - pythonApi
+      - client
+
