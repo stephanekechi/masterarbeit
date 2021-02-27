@@ -108,15 +108,17 @@ class ModelBuilder:
     def get_train_test_data(self, max_features):
         web_scraper = WebScraper(3, 3)
         scraped_false_data = web_scraper.get_false_news()
+        scraped_true_data = web_scraper.get_true_news()
 
         #Adding new column in both dataframe variables ('0' for fake) and ('1' for true)
         self.true_dataset['label'] = 1
+        scraped_true_data['label'] = 1
+        print(scraped_true_data.head)
         self.fake_dataset['label'] = 0
-        ###
         scraped_false_data['label'] = 0
 
         #Concatenation of both dataframe variables
-        total_dataset = pda.concat([scraped_false_data, self.true_dataset, self.fake_dataset], axis=0)
+        total_dataset = pda.concat([scraped_false_data, self.true_dataset, self.fake_dataset, scraped_true_data], axis=0)
         
         total_dataset['fullLengthText'] = self.text_processor.parse_title_text(total_dataset.title, total_dataset.text)
 
