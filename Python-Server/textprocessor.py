@@ -5,17 +5,40 @@ from nltk.corpus import stopwords, wordnet
 from nltk.stem.wordnet import WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 import numpy
+import datefinder
+from datetime import datetime
+
 
 nltk.download('stopwords')
 
 class Textprocessor:
+
     name = ''
     
     def __init__(self, name):
         self.name = name
 
-    def parse_title_date(self, title, text):
-            return title + ' ' + text
+    def retrieve_date(self, text):
+
+        if text is None:
+            return ''
+
+        date = ''
+        dates = datefinder.find_dates(text)
+        
+        for elt_date in dates:
+            date = elt_date
+
+        #print(date)
+            
+        return date
+    
+    def save_to_csv(self, records, file_path):
+        #df.to_csv('Dataset/true_facts.csv', index=False, encoding='utf-8')
+        records.to_csv(file_path, index=False, encoding='utf-8')
+
+    def parse_title_text(self, title, text):
+        return title + ' ' + text
     
     
     def remove_punctuations(self, input_text):
