@@ -22,8 +22,10 @@ import pandas as pda
 
 #Local Classes Imports
 from textprocessor import Textprocessor
+from webscraper import WebScraper
 
 class ModelBuilder:
+
     true_dataset: ''
     fake_dataset: ''
     text_processor: ''
@@ -104,16 +106,19 @@ class ModelBuilder:
         return data_tfidf
 
     def get_train_test_data(self, max_features):
+        web_scraper = WebScraper(3, 3)
+        scraped_false_data = web_scraper.get_false_news()
+
         #Adding new column in both dataframe variables ('0' for fake) and ('1' for true)
         self.true_dataset['label'] = 1
         self.fake_dataset['label'] = 0
+        ###
+        scraped_false_data['label'] = 0
 
         #Concatenation of both dataframe variables
-        total_dataset = pda.concat([self.true_dataset, self.fake_dataset], axis=0)
-
-        #Combining title and text to obtain a single string and droping them both
-        total_dataset['fullLengthText'] = total_dataset.title + ' ' + total_dataset.text
-        total_dataset.drop(['title', 'text'], axis=1, inplace = True)
+        total_dataset = pda.concat([scraped_false_data, self.true_dataset, self.fake_dataset], axis=0)
+        
+        total_dataset['fullLengthText'] = self.text_processor.parse_title_text(total_dataset.title, total_dataset.text)
 
         #Creating a new tempory dataframe using 'label' and 'fullLengthText'
         temp_data = total_dataset[['fullLengthText', 'label']]
@@ -152,10 +157,14 @@ class ModelBuilder:
         nb_predictions = NB.predict(train_test_data['test_x'])
         text_prediction = NB.predict(tfid_to_predict)
         #Model evaluation
-        print(classification_report(train_test_data['test_y'], nb_predictions))
-        print(confusion_matrix(train_test_data['test_y'], nb_predictions))
+        nb_classification_report = classification_report(train_test_data['test_y'], nb_predictions)
+        print(nb_classification_report)
+        #print(confusion_matrix(train_test_data['test_y'], nb_predictions))
 
-        return text_prediction
+        return {
+            "text_prediction": text_prediction,
+            "nb_prediction_report": nb_classification_report
+        }
 
     def perform_random_forest(self, train_test_data, tfid_to_predict):
         ##Random Forest
@@ -165,10 +174,14 @@ class ModelBuilder:
         rf_predictions = RF.predict(train_test_data['test_x'])
         text_prediction = RF.predict(tfid_to_predict)
         #Model Evaluation
-        print(classification_report(train_test_data['test_y'], rf_predictions))
-        print(confusion_matrix(train_test_data['test_y'], rf_predictions))
+        rf_classification_report = classification_report(train_test_data['test_y'], rf_predictions)
+        print(rf_classification_report)
+        #print(confusion_matrix(train_test_data['test_y'], rf_predictions))
 
-        return text_prediction
+        return {
+            "text_prediction": text_prediction,
+            "nb_prediction_report": rf_classification_report
+        }
 
     def predict(self, tfid_to_predict, max_features):
         train_test_data = self.get_train_test_data(max_features)
@@ -178,8 +191,14 @@ class ModelBuilder:
         nb_predicted = self.perform_naive_bayes(train_test_data, tfid_to_predict)
 
         resJson = {
-            'naive_bayes': int(nb_predicted[0]),
-            'random_forest': int(rf_predicted[0])
+            'naive_bayes': {
+                'prediction': int(nb_predicted["text_prediction"][0]),
+                'report': nb_predicted["nb_prediction_report"]
+            },
+            'random_forest': {
+                'prediction': int(rf_predicted["text_prediction"][0]),
+                'report': rf_predicted["nb_prediction_report"]
+            }
         }
 
         return resJson
