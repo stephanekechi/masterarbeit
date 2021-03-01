@@ -1,29 +1,22 @@
 import re
 import nltk
+import string
+import pandas as pda
+
 from nltk.corpus import stopwords #not working
 nltk.download('stopwords') #Download stopwords of different languages
 nltk.download('punkt') #Download punkt bibliothek of different languages
 nltk.download('wordnet') #Download wordnet bibliothek of different languages
 
 from nltk.stem.wordnet import WordNetLemmatizer
-import string
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix, classification_report
-
-#Naive Bayes algorithm
-from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-
-#RandomForest algorithm
-from sklearn.ensemble import RandomForestClassifier
-
-# linear algebra
-import pandas as pda
 
 #Local Classes Imports
 from textprocessor import Textprocessor
 from webscraper import WebScraper
 from algorithms.naive_bayes import NaiveBayes
+from algorithms.random_forest import RandomForest
 
 class ModelBuilder:
 
@@ -152,30 +145,17 @@ class ModelBuilder:
         }
         return train_test_obj
 
-    ##To be replaced
     def perform_naive_bayes(self, train_test_data, tfid_to_predict):
         nb_model = NaiveBayes()
         prediction_result = nb_model.predict(train_test_data, tfid_to_predict)
 
         return prediction_result
 
-    ##To be replaced
     def perform_random_forest(self, train_test_data, tfid_to_predict):
-        ##Random Forest
-        #Initiation. fitting and prediction
-        RF = RandomForestClassifier(n_estimators = 10, random_state = int(train_test_data['seed']))
-        RF.fit(train_test_data['train_x'], train_test_data['train_y'])
-        rf_predictions = RF.predict(train_test_data['test_x'])
-        text_prediction = RF.predict(tfid_to_predict)
-        #Model Evaluation
-        rf_classification_report = classification_report(train_test_data['test_y'], rf_predictions)
-        print(rf_classification_report)
-        #print(confusion_matrix(train_test_data['test_y'], rf_predictions))
+        rf_model = RandomForest(10, int(train_test_data['seed']))
+        prediction_result = rf_model.predict(train_test_data, tfid_to_predict)
 
-        return {
-            "text_prediction": text_prediction,
-            "rf_prediction_report": rf_classification_report
-        }
+        return prediction_result
 
     def predict(self, tfid_to_predict, max_features):
         train_test_data = self.get_train_test_data(max_features)

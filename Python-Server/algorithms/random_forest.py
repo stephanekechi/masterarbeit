@@ -1,11 +1,11 @@
 from interface import implements, Interface
 from algorithms.interface_algorithm import IAlgorithm
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report #,confusion_matrix
 
 #RandomForest algorithm
 from sklearn.ensemble import RandomForestClassifier
 
-class NaiveBayes(implements(IAlgorithm)):
+class RandomForest(implements(IAlgorithm)):
 
     RF = None
 

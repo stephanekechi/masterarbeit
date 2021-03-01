@@ -1,6 +1,6 @@
 from interface import implements, Interface
 from algorithms.interface_algorithm import IAlgorithm
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report #,confusion_matrix
 
 #Naive Bayes algorithm
 from sklearn.naive_bayes import MultinomialNB
