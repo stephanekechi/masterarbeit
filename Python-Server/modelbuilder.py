@@ -23,6 +23,7 @@ import pandas as pda
 #Local Classes Imports
 from textprocessor import Textprocessor
 from webscraper import WebScraper
+from algorithms.naive_bayes import NaiveBayes
 
 class ModelBuilder:
 
@@ -151,23 +152,14 @@ class ModelBuilder:
         }
         return train_test_obj
 
+    ##To be replaced
     def perform_naive_bayes(self, train_test_data, tfid_to_predict):
-        ##Multinominal Naive Bayes
-        #Initiation, fitting and prediction
-        NB = MultinomialNB()
-        NB.fit(train_test_data['train_x'], train_test_data['train_y'])
-        nb_predictions = NB.predict(train_test_data['test_x'])
-        text_prediction = NB.predict(tfid_to_predict)
-        #Model evaluation
-        nb_classification_report = classification_report(train_test_data['test_y'], nb_predictions)
-        print(nb_classification_report)
-        #print(confusion_matrix(train_test_data['test_y'], nb_predictions))
+        nb_model = NaiveBayes()
+        prediction_result = nb_model.predict(train_test_data, tfid_to_predict)
 
-        return {
-            "text_prediction": text_prediction,
-            "nb_prediction_report": nb_classification_report
-        }
+        return prediction_result
 
+    ##To be replaced
     def perform_random_forest(self, train_test_data, tfid_to_predict):
         ##Random Forest
         #Initiation. fitting and prediction
@@ -182,7 +174,7 @@ class ModelBuilder:
 
         return {
             "text_prediction": text_prediction,
-            "nb_prediction_report": rf_classification_report
+            "rf_prediction_report": rf_classification_report
         }
 
     def predict(self, tfid_to_predict, max_features):
@@ -199,7 +191,7 @@ class ModelBuilder:
             },
             'random_forest': {
                 'prediction': int(rf_predicted["text_prediction"][0]),
-                'report': rf_predicted["nb_prediction_report"]
+                'report': rf_predicted["rf_prediction_report"]
             }
         }
 
