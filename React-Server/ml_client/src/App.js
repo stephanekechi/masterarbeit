@@ -1,25 +1,41 @@
-import logo from './logo.svg';
+import React, {Component} from 'react';
+import {BrowserRouter as Router} from 'react-router-dom';
+//import logo from './logo.svg';
+import RoutingCom from './components/routingCom';
+import AuthenticationService from './services/authenticationService';
+import HeaderCom from './components/layout_header';
+import FooterCom from './components/layout_footer';
 import './App.css';
+import './bootstrap.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+
+  constructor(props){
+        super(props)
+
+        this.state = {
+            username: AuthenticationService.getLoggedUser,
+            isLoggedIn: AuthenticationService.isUserLoggedIn
+        };
+  }
+
+  render(){
+    return (
+      <div className="App">
+        <Router>
+          <>
+            <HeaderCom
+              isLoggedIn = {this.state.isLoggedIn}
+              logout = {AuthenticationService.logout}
+              />
+              <RoutingCom />
+            <FooterCom/>
+          </>
+        </Router>
+      </div>
+    );
+  }
+  
 }
 
 export default App;
