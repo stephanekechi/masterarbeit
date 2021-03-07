@@ -8,10 +8,6 @@ class AuthenticationService extends Component {
 
     }
 
-    makeServerRequest(username, password){
-        let user = axios.get()
-    }
-
     isUserLoggedIn(){
 
         let loggedUser = sessionStorage.getItem('authenticatedUser');
@@ -27,7 +23,7 @@ class AuthenticationService extends Component {
     }
 
     retrieveUserData(username, password){
-        return axios.get('http://localhost:5000/test');
+        return axios.get('http://localhost:5000/api/test');
     }
 
     logout(){

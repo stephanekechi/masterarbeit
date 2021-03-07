@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Redirect} from 'react-router-dom';
 import AuthenticationService from '../services/authenticationService';
 
 class LoginCom extends Component {
@@ -26,7 +27,6 @@ class LoginCom extends Component {
     }
 
     handlerInputChange(event){
-        console.log(event.target.value);
         this.setState(
             {
                 [event.target.name]:
@@ -36,13 +36,16 @@ class LoginCom extends Component {
     }
 
     loginClicked(){
-        console.log(this.state.username, this.state.password);
-
+        this.logMessage(this.state.username + ' ' + this.state.password);
         AuthenticationService.retrieveUserData(this.state.username, this.state.password)
             .then(response => this.handleSuccessfullLogin(response.data.username))
             .catch(err => {
-                if(err) console.log(err);
-            })
+                if(err) this.logMessage(err);
+            });
+    }
+
+    logMessage(message){
+        console.log(message);
     }
 
     render() {

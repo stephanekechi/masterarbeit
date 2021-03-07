@@ -10,7 +10,7 @@ class WelcomeCom extends Component{
         return (
             <div>
                 <div className="container">
-                    Welcome {this.props.match.params.name}
+                    Welcome {!this.props && this.props.match.params.name}
                     <p>Here the Menu</p>
                     <Link to="/factcheck">Fact chech information</Link>
                 </div>

@@ -14,9 +14,22 @@ class App extends Component {
         super(props)
 
         this.state = {
-            username: AuthenticationService.getLoggedUser,
-            isLoggedIn: AuthenticationService.isUserLoggedIn
+            username: AuthenticationService.getLoggedUser(),
+            isLoggedIn: AuthenticationService.isUserLoggedIn()
         };
+
+        this.logout = this.logout.bind(this);
+        //this.login = this.login.bind(this);
+  }
+
+  logout(){
+      AuthenticationService.logout();
+      this.setState({isLoggedIn: AuthenticationService.isUserLoggedIn()});
+      //this.props.history.push('/login');
+  }
+
+  componentDidMount(){
+    this.setState({isLoggedIn: AuthenticationService.isUserLoggedIn()});
   }
 
   render(){
@@ -26,7 +39,7 @@ class App extends Component {
           <>
             <HeaderCom
               isLoggedIn = {this.state.isLoggedIn}
-              logout = {AuthenticationService.logout}
+              logout = {this.logout}
               />
               <RoutingCom />
             <FooterCom/>

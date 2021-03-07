@@ -107,7 +107,7 @@ class ModelBuilder:
         #Adding new column in both dataframe variables ('0' for fake) and ('1' for true)
         self.true_dataset['label'] = 1
         scraped_true_data['label'] = 1
-        print(scraped_true_data.head)
+        #print(scraped_true_data.head)
         self.fake_dataset['label'] = 0
         scraped_false_data['label'] = 0
 
@@ -164,15 +164,31 @@ class ModelBuilder:
         rf_predicted = self.perform_random_forest(train_test_data, tfid_to_predict)
         nb_predicted = self.perform_naive_bayes(train_test_data, tfid_to_predict)
 
+        """
         resJson = {
             'naive_bayes': {
+                'description': 'Naive Bayes',
                 'prediction': int(nb_predicted["text_prediction"][0]),
                 'report': nb_predicted["nb_prediction_report"]
             },
             'random_forest': {
+                'description': 'Random Forest',
                 'prediction': int(rf_predicted["text_prediction"][0]),
                 'report': rf_predicted["rf_prediction_report"]
             }
-        }
+        }"""
+
+        resJson = [
+                    {
+                        'description': 'Naive Bayes',
+                        'prediction': int(nb_predicted["text_prediction"][0]),
+                        'report': nb_predicted["nb_prediction_report"]
+                    },
+                    {
+                        'description': 'Random Forest',
+                        'prediction': int(rf_predicted["text_prediction"][0]),
+                        'report': rf_predicted["rf_prediction_report"]
+                    }
+                  ]
 
         return resJson

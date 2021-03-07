@@ -4,7 +4,7 @@ import AuthenticationService from '../services/authenticationService';
 
 class AuthenticatedRoute extends Component{
     render(){
-        return AuthenticationService.isUserLoggedIn ? (
+        return AuthenticationService.isUserLoggedIn() ? (
             <Route {...this.props}/>
         ) : (
             <Redirect to="/login"/>

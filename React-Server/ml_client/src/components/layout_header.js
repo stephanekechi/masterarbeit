@@ -1,12 +1,14 @@
 import React, {Component} from 'react';
 import {BrowserRouter as Router, Link} from 'react-router-dom';
-import { withRouter } from 'react-router';
+//import { withRouter } from 'react-router';
 
 class HeaderCom extends Component{
     constructor(props){
           super(props)
           console.log(props.isLoggedIn);
+
     }
+
     render(){
         return (
             <header>
@@ -22,4 +24,5 @@ class HeaderCom extends Component{
     }
 }
 
-export default withRouter(HeaderCom);
+//export default withRouter(HeaderCom);
+export default HeaderCom;

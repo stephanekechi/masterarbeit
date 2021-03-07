@@ -4,7 +4,7 @@ class FooterCom extends Component{
     render(){
         return(
             <footer className="footer">
-              <span className="text-muted">All Rights reserved 2018 @SNW</span>
+              <span className="text-muted">All Rights reserved 2021 @SNW</span>
             </footer>
         );
     }

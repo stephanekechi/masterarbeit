@@ -4,20 +4,20 @@ from routes_handler import RoutesHandler
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources=r'/api/*')
 #cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 routes_handlers = RoutesHandler('models/rbmodel.pickle', 'models/nbmodel.pickle')
 #routes_handlers = RoutesHandler('rbmodel.mdl', 'nbmodel.mdl')
 
-@app.route('/test', methods=['GET'])
+@app.route('/api/test', methods=['GET'])
 def test():
     resJson = {
         'username': 'Stephanekechi',
     }
     return jsonify(resJson), 200
 
-@app.route('/add', methods=['POST'])
+@app.route('/api/add', methods=['POST'])
 def add():
     postedData = request.get_json()
 
@@ -26,7 +26,7 @@ def add():
     }
     return jsonify(resJson), 200
 
-@app.route('/classify', methods=['POST'])
+@app.route('/api/classify', methods=['POST'])
 def classify():
     postedData = request.get_json()
     print(postedData)
