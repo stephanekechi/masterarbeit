@@ -7,9 +7,11 @@ class SearchCom extends Component{
         super(props);
 
         this.state = {
-            text: '',
+            text: "WASHINGTON (Reuters) - The special counsel investigation of links between Russia and President Trump’s 2016 election campaign " +
+                "should continue without interference in 2018, despite calls from some Trump administration allies and Republican lawmakers to shut it down, a " +
+                "prominent Republican senator said on Sunday.",
             date: '',
-            title: '',
+            title: "Senior U.S. Republican senator: 'Let Mr. Mueller do his job'",
             hasRequestFailed: false,
             isRequestLoading: false,
             classificationObj: null
@@ -17,6 +19,7 @@ class SearchCom extends Component{
 
         this.handlerInputChange = this.handlerInputChange.bind(this);
         this.handelClassificationCall = this.handelClassificationCall.bind(this);
+        this.convertStrToPercent = this.convertStrToPercent.bind(this);
     }
 
     async handelClassificationCall(){
@@ -56,6 +59,19 @@ class SearchCom extends Component{
         )
     }
 
+    convertStrToPercent(strFloatNumber){
+        if(strFloatNumber === ''){
+            return '0 %';
+        }else{
+            let percentNumber = parseFloat(strFloatNumber) * 100
+            if(percentNumber === NaN){
+                return '0 %';
+            }else{
+                return percentNumber.toString() + ' %';
+            }
+        }
+    }
+
     logMessage(message){
         console.log(message);
     }
@@ -92,7 +108,7 @@ class SearchCom extends Component{
                 <br/>
                 {this.state.isRequestLoading &&
                     <div>
-                        Your request is still loading ...
+                        The server is still processing your request ...
                         It could take up to 4 Minutes!
                     </div>
                 }
@@ -111,9 +127,13 @@ class SearchCom extends Component{
                                     <tr key={index}>
                                         <td>{obj.description}</td>
                                         <td>{obj.prediction}</td>
-                                        <td>{obj.report.substring(
-                                            obj.report.length-10, obj.report.length
-                                        )}</td>
+                                        <td>{this.convertStrToPercent(
+                                                obj.report.substring(
+                                                    obj.report.length-20,
+                                                    obj.report.length-7
+                                                )
+                                            )
+                                        }</td>
                                     </tr>
                                 )}
                             </tbody>
