@@ -1,28 +1,22 @@
 import re
 import nltk
+import string
+import pandas as pda
+
 from nltk.corpus import stopwords #not working
 nltk.download('stopwords') #Download stopwords of different languages
 nltk.download('punkt') #Download punkt bibliothek of different languages
 nltk.download('wordnet') #Download wordnet bibliothek of different languages
 
 from nltk.stem.wordnet import WordNetLemmatizer
-import string
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix, classification_report
-
-#Naive Bayes algorithm
-from sklearn.naive_bayes import MultinomialNB
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-
-#RandomForest algorithm
-from sklearn.ensemble import RandomForestClassifier
-
-# linear algebra
-import pandas as pda
 
 #Local Classes Imports
 from textprocessor import Textprocessor
 from webscraper import WebScraper
+from algorithms.naive_bayes import NaiveBayes
+from algorithms.random_forest import RandomForest
 
 class ModelBuilder:
 
@@ -113,7 +107,7 @@ class ModelBuilder:
         #Adding new column in both dataframe variables ('0' for fake) and ('1' for true)
         self.true_dataset['label'] = 1
         scraped_true_data['label'] = 1
-        print(scraped_true_data.head)
+        #print(scraped_true_data.head)
         self.fake_dataset['label'] = 0
         scraped_false_data['label'] = 0
 
@@ -152,38 +146,16 @@ class ModelBuilder:
         return train_test_obj
 
     def perform_naive_bayes(self, train_test_data, tfid_to_predict):
-        ##Multinominal Naive Bayes
-        #Initiation, fitting and prediction
-        NB = MultinomialNB()
-        NB.fit(train_test_data['train_x'], train_test_data['train_y'])
-        nb_predictions = NB.predict(train_test_data['test_x'])
-        text_prediction = NB.predict(tfid_to_predict)
-        #Model evaluation
-        nb_classification_report = classification_report(train_test_data['test_y'], nb_predictions)
-        print(nb_classification_report)
-        #print(confusion_matrix(train_test_data['test_y'], nb_predictions))
+        nb_model = NaiveBayes()
+        prediction_result = nb_model.predict(train_test_data, tfid_to_predict)
 
-        return {
-            "text_prediction": text_prediction,
-            "nb_prediction_report": nb_classification_report
-        }
+        return prediction_result
 
     def perform_random_forest(self, train_test_data, tfid_to_predict):
-        ##Random Forest
-        #Initiation. fitting and prediction
-        RF = RandomForestClassifier(n_estimators = 10, random_state = int(train_test_data['seed']))
-        RF.fit(train_test_data['train_x'], train_test_data['train_y'])
-        rf_predictions = RF.predict(train_test_data['test_x'])
-        text_prediction = RF.predict(tfid_to_predict)
-        #Model Evaluation
-        rf_classification_report = classification_report(train_test_data['test_y'], rf_predictions)
-        print(rf_classification_report)
-        #print(confusion_matrix(train_test_data['test_y'], rf_predictions))
+        rf_model = RandomForest(10, int(train_test_data['seed']))
+        prediction_result = rf_model.predict(train_test_data, tfid_to_predict)
 
-        return {
-            "text_prediction": text_prediction,
-            "nb_prediction_report": rf_classification_report
-        }
+        return prediction_result
 
     def predict(self, tfid_to_predict, max_features):
         train_test_data = self.get_train_test_data(max_features)
@@ -192,15 +164,31 @@ class ModelBuilder:
         rf_predicted = self.perform_random_forest(train_test_data, tfid_to_predict)
         nb_predicted = self.perform_naive_bayes(train_test_data, tfid_to_predict)
 
+        """
         resJson = {
             'naive_bayes': {
+                'description': 'Naive Bayes',
                 'prediction': int(nb_predicted["text_prediction"][0]),
                 'report': nb_predicted["nb_prediction_report"]
             },
             'random_forest': {
+                'description': 'Random Forest',
                 'prediction': int(rf_predicted["text_prediction"][0]),
-                'report': rf_predicted["nb_prediction_report"]
+                'report': rf_predicted["rf_prediction_report"]
             }
-        }
+        }"""
+
+        resJson = [
+                    {
+                        'description': 'Naive Bayes',
+                        'prediction': int(nb_predicted["text_prediction"][0]),
+                        'report': nb_predicted["nb_prediction_report"]
+                    },
+                    {
+                        'description': 'Random Forest',
+                        'prediction': int(rf_predicted["text_prediction"][0]),
+                        'report': rf_predicted["rf_prediction_report"]
+                    }
+                  ]
 
         return resJson
