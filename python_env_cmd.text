@@ -1,0 +1,5 @@
+sudo ln -fs /usr/bin/python3.6 /usr/bin/python
+
+sudo ln -fs /usr/bin/python2.7 /usr/bin/python
+
+https://www.spinup.com/set-python-3-as-default-on-centos-7/

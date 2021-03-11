@@ -1,20 +1,32 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from routes_handler import RoutesHandler
+
+
 app = Flask(__name__)
+CORS(app, resources=r'/api/*')
+#cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 routes_handlers = RoutesHandler('models/rbmodel.pickle', 'models/nbmodel.pickle')
 #routes_handlers = RoutesHandler('rbmodel.mdl', 'nbmodel.mdl')
 
-@app.route('/add', methods=['POST'])
+@app.route('/api/test', methods=['GET'])
+def test():
+    resJson = {
+        'username': 'Stephanekechi',
+    }
+    return jsonify(resJson), 200
+
+@app.route('/api/add', methods=['POST'])
 def add():
     postedData = request.get_json()
 
-    retJson = {
+    resJson = {
         'message': int(postedData["x"]) + int(postedData["y"])
     }
-    return jsonify(retJson), 200
+    return jsonify(resJson), 200
 
-@app.route('/classify', methods=['POST'])
+@app.route('/api/classify', methods=['POST'])
 def classify():
     postedData = request.get_json()
     print(postedData)
