@@ -2,7 +2,7 @@ from textprocessor import Textprocessor
 from modelbuilder import ModelBuilder
 #import os
 import pickle
-from sklearn.externals import joblib
+from db_services.mysql_db import MySqlDB
 
 class RoutesHandler:
 
@@ -10,13 +10,20 @@ class RoutesHandler:
     nb_modelfile = ''
     rf_model = ''
     nb_model = ''
+    db = None
 
 
     def __init__(self, rf_modelfile, nb_modelfile):
         self.rf_modelfile = rf_modelfile
         self.nb_modelfile = nb_modelfile
+        """
+        self.db = MySqlDB({
+            "host" : "localhost",
+            "user" : "root",
+            "passwd": "root"
+        }) """
 
-    #ToDo
+    #ToDo, Not efficient now
     def load_models(self):
         with open(self.rf_modelfile, 'rb') as rf_file:
             self.rf_model = pickle.load(rf_file)
@@ -33,3 +40,7 @@ class RoutesHandler:
         predictions = modelbuilders.predict(text_to_tfid['tfid_features'], text_to_tfid['max_features'])
 
         return predictions
+    """
+    def get_users(self):
+        uu
+    """

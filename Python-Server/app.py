@@ -17,6 +17,13 @@ def test():
     }
     return jsonify(resJson), 200
 
+@app.route('/api/get/users', methods=['GET'])
+def get_users():
+    resJson = {
+        'username': 'Stephanekechi',
+    }
+    return jsonify(resJson), 200
+
 @app.route('/api/add', methods=['POST'])
 def add():
     postedData = request.get_json()
