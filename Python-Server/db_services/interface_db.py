@@ -2,7 +2,7 @@ from interface import Interface
 
 class IDataBase(Interface):
 
-    def connect(self, host_infos):
+    def db_init(self):
         pass
     
     def execute_query(self, str_query):

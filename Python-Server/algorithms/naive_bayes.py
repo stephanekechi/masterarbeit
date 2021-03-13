@@ -1,4 +1,4 @@
-from interface import implements, Interface
+from interface import implements
 from algorithms.interface_algorithm import IAlgorithm
 from sklearn.metrics import classification_report #,confusion_matrix
 
