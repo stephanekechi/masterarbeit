@@ -2,3 +2,4 @@ Flask
 datefinder
 python-interface
 mysql-connector
+flask-cors
