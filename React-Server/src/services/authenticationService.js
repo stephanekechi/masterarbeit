@@ -22,8 +22,8 @@ class AuthenticationService extends Component {
         return sessionStorage.getItem('authenticatedUser');
     }
 
-    retrieveUserData(username, password){
-        return axios.get('http://localhost:5000/api/test');
+    retrieveUserData(postedData){
+        return axios.post('http://localhost:5000/api/user/auth',postedData);
     }
 
     logout(){

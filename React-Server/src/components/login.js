@@ -18,11 +18,15 @@ class LoginCom extends Component {
     }
 
     handleSuccessfullLogin(username){
-        sessionStorage.setItem('authenticatedUser', username);
-        this.props.history.push(`/welcome/${username}`);
+        if(username === ''){
+            this.handleFailLogin();
+        }else{
+            sessionStorage.setItem('authenticatedUser', username);
+            this.props.history.push(`/welcome/${username}`);
+        }
     }
 
-    handleFailLogin(username){
+    handleFailLogin(){
         this.setState({hasLoginFailed: true});
     }
 
@@ -35,9 +39,12 @@ class LoginCom extends Component {
         )
     }
 
-    loginClicked(){
+    async loginClicked(){
         this.logMessage(this.state.username + ' ' + this.state.password);
-        AuthenticationService.retrieveUserData(this.state.username, this.state.password)
+        await AuthenticationService.retrieveUserData({
+                username: this.state.username,
+                password: this.state.password
+            })
             .then(response => this.handleSuccessfullLogin(response.data.username))
             .catch(err => {
                 if(err) this.logMessage(err);
