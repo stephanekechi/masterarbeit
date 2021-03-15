@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Link} from 'react-router-dom';
-//import { withRouter } from 'react-router';
+import {Link} from 'react-router-dom';
 
 class HeaderCom extends Component{
     constructor(props){
@@ -24,5 +23,4 @@ class HeaderCom extends Component{
     }
 }
 
-//export default withRouter(HeaderCom);
 export default HeaderCom;

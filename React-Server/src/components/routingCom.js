@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Switch, Route} from 'react-router-dom';
+import {Switch, Route, Redirect} from 'react-router-dom';
 import LoginCom from './login';
 import SearchCom from './search';
 import ErrorCom from './error';
@@ -7,15 +7,15 @@ import WelcomeCom from './welcome';
 import AuthenticatedRoute from './authenticatedRoute';
 
 class RoutingCom extends Component{
-    constructor(props){
-        super(props)
-    }
 
     render(){
         return (
             <Switch>
                 <AuthenticatedRoute path="/" exact component={WelcomeCom}></AuthenticatedRoute>
                 <Route path="/login" component={LoginCom}></Route>
+                <Route path="/logout">
+                    <Redirect to="/login"/>
+                </Route>
                 <AuthenticatedRoute path="/welcome"
                     component={()=> <WelcomeCom />}>
                 </AuthenticatedRoute>

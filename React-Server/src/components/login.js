@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Redirect} from 'react-router-dom';
 import AuthenticationService from '../services/authenticationService';
 
 class LoginCom extends Component {
@@ -8,9 +7,11 @@ class LoginCom extends Component {
         super(props)
 
         this.state = {
-            username: '"enter username"',
-            password: '',
-            hasLoginFailed: false
+            username: 'Enter Username',
+            password: 'Enter Password',
+            hasLoginFailed: false,
+            alertMessage: '',
+            alertMessageClass: ''
         };
 
         this.handlerInputChange = this.handlerInputChange.bind(this);
@@ -21,13 +22,28 @@ class LoginCom extends Component {
         if(username === ''){
             this.handleFailLogin();
         }else{
+            this.setState({hasLoginFailed: false});
             sessionStorage.setItem('authenticatedUser', username);
             this.props.history.push(`/welcome/${username}`);
         }
     }
 
     handleFailLogin(){
-        this.setState({hasLoginFailed: true});
+        this.setState(
+            {
+                hasLoginFailed: true,
+                alertMessage: 'Invalid Credentials',
+                alertMessageClass: 'alert alert-warning'
+            });
+    }
+
+    handleError(){
+        this.setState(
+            {
+                hasLoginFailed: true,
+                alertMessage: 'An error occured while processing your request',
+                alertMessageClass: 'alert alert-danger'
+            });
     }
 
     handlerInputChange(event){
@@ -47,7 +63,10 @@ class LoginCom extends Component {
             })
             .then(response => this.handleSuccessfullLogin(response.data.username))
             .catch(err => {
-                if(err) this.logMessage(err);
+                if(err) {
+                    this.handleError();
+                    this.logMessage(err);
+                }
             });
     }
 
@@ -60,7 +79,7 @@ class LoginCom extends Component {
             <div>
                 <h1>Login</h1>
                 <div className="container">
-                    {this.state.hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
+                    {this.state.hasLoginFailed && <div className={this.state.alertMessageClass}>{this.state.alertMessage}</div>}
                     User Name: <input type="text" name="username" value={this.state.username}
                         onChange={this.handlerInputChange}/>
                     Password: <input type="password" name="password" value={this.state.password}

@@ -2,11 +2,6 @@ import {Component} from 'react';
 import axios from 'axios';
 
 class AuthenticationService extends Component {
-    
-    constructor(props){
-        super(props);
-
-    }
 
     isUserLoggedIn(){
 
