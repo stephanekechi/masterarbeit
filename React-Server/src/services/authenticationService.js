@@ -2,11 +2,6 @@ import {Component} from 'react';
 import axios from 'axios';
 
 class AuthenticationService extends Component {
-    
-    constructor(props){
-        super(props);
-
-    }
 
     isUserLoggedIn(){
 
@@ -22,8 +17,8 @@ class AuthenticationService extends Component {
         return sessionStorage.getItem('authenticatedUser');
     }
 
-    retrieveUserData(username, password){
-        return axios.get('http://localhost:5000/api/test');
+    retrieveUserData(postedData){
+        return axios.post('http://localhost:5000/api/user/auth',postedData);
     }
 
     logout(){

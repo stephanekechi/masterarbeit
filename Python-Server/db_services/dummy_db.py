@@ -25,6 +25,6 @@ class DummyDB(implements(IDataBase)):
         result_query = []
         if(str_query == 'get'):
             result_query = self.userList
-        elif(str_query == 'select'):
-            # do something else
+        # elif(str_query == 'select'):
+        #     do something else
         return result_query

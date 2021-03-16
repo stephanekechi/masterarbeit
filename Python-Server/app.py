@@ -10,6 +10,7 @@ CORS(app, resources=r'/api/*')
 routes_handlers = RoutesHandler('models/rbmodel.pickle', 'models/nbmodel.pickle')
 #routes_handlers = RoutesHandler('rbmodel.mdl', 'nbmodel.mdl')
 
+#soon or later, should be deleted
 @app.route('/api/test', methods=['GET'])
 def test():
     resJson = {
@@ -17,11 +18,19 @@ def test():
     }
     return jsonify(resJson), 200
 
-@app.route('/api/get/users', methods=['GET'])
-def get_users():
+@app.route('/api/user/auth', methods=['POST'])
+def get_user_auth():
+    postedData = request.get_json()
+    print(postedData)
+
+    if(postedData['username'] == None or postedData['password'] == None):
+        jsonify({'error': 'empty input data'}), 500
+
+    found_user = routes_handlers.get_users(postedData['username'], postedData['password'])
     resJson = {
-        'username': 'Stephanekechi',
+        'username': found_user,
     }
+    
     return jsonify(resJson), 200
 
 @app.route('/api/add', methods=['POST'])

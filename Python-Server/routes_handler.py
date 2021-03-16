@@ -2,7 +2,8 @@ from textprocessor import Textprocessor
 from modelbuilder import ModelBuilder
 #import os
 import pickle
-from db_services.mysql_db import MySqlDB
+# from db_services.mysql_db import MySqlDB
+from db_services.dummy_db import DummyDB
 
 class RoutesHandler:
 
@@ -16,6 +17,7 @@ class RoutesHandler:
     def __init__(self, rf_modelfile, nb_modelfile):
         self.rf_modelfile = rf_modelfile
         self.nb_modelfile = nb_modelfile
+        self.db = DummyDB()
         """
         self.db = MySqlDB({
             "host" : "localhost",
@@ -40,7 +42,14 @@ class RoutesHandler:
         predictions = modelbuilders.predict(text_to_tfid['tfid_features'], text_to_tfid['max_features'])
 
         return predictions
-    """
-    def get_users(self):
-        uu
-    """
+    
+    #With a new db, this method should be refactor
+    def get_users(self, username, password):
+        result = ''
+        userList = self.db.execute_query('get')
+        
+        for user in userList:
+            if(user['username'] == username and user['password'] == password):
+                result = username
+
+        return result

@@ -3,9 +3,6 @@ import {Link} from 'react-router-dom';
 
 class WelcomeCom extends Component{
 
-    constructor(props){
-        super(props);
-    }
     render(){
         return (
             <div>

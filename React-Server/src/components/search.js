@@ -64,7 +64,7 @@ class SearchCom extends Component{
             return '0 %';
         }else{
             let percentNumber = parseFloat(strFloatNumber) * 100
-            if(percentNumber === NaN){
+            if(isNaN(percentNumber)){
                 return '0 %';
             }else{
                 return percentNumber.toString() + ' %';
